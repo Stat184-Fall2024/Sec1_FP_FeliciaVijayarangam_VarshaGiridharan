@@ -1,0 +1,41 @@
+---
+title: "STAT 184 Final Project: Exploring Flight Status During the Week of Christmas"
+author: "Felicia Vijayarangam, Varsha Giridharan"
+date: "Dec. 18, 2024"
+format: 
+  pdf: 
+    toc: false
+    number-sections: true
+    number-depth: 5
+    fig-align: center
+    cap-location: top
+    geometry: 
+      - top=1in
+      - left=1in
+      - right=1in
+      - bottom=1in
+    colorlinks: true
+execute: 
+  echo: false
+  warning: false
+---
+
+## Introduction
+
+## Literature Review
+
+## Methodology 
+
+## Data Exploration
+
+## Results
+
+## Conclusions
+
+## References
+
+## Code Appendix
+
+```{r codeAppend, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```
