@@ -184,8 +184,9 @@ ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines),
        fill = "Airline") +
   theme_minimal() +
   theme(
-     plot.title = element_text(hjust = 0.5, size = 10), 
-    legend.position = "bottom")  
+     plot.title = element_text(hjust = 0.5, size = ), 
+     legend.position = "bottom",
+     legend.text = element_text(size = 6.5))  
 ```
 
 *Analysis*: Looking at our x and y axis, we can see that Alaska Airlines Inc. had consistently low average departure delays that were less that 5 minutes. the Hawaiian Airlines Inc were also on the low end when it came to average departure delays since they were less than 10 minutes. The the other hand, Allegiant Air had the most delays by far, leading to an average more than 30 minutes on December 27. JetBlue Airways flight delays were also high compared to other flights, especially since they had an average departure delay of more than 20 minutes on December 27. Another aspect to consider is that the the average delays across airlines were the lowest on the 22. Also, the average delay rates spiked Christmas day and the days after.
@@ -231,9 +232,14 @@ ggplot(avgDelay_airlineDay2023 %>% filter(Description %in% specific_airlines2023
        fill = "Airline") +
   theme_minimal() +
   theme(
-     plot.title = element_text(hjust = 0.5, size = 10), 
-    legend.position = "bottom")  
+    plot.title = element_text(hjust = 0.5, size =10 ), 
+    legend.position = "bottom",
+    legend.text = element_text(size = 6.5)
+  )
+     
 ```
+
+*Analysis*: In the graph above, the Hawaiian Airlines had the lowest average delays by far. Their average was consistently below 10 minutes throughout the entire week. Next, Alaska Airlines Inc. had consistently low average departure delays that are normally below 10-20 minutes. The airlines with high average delays seemed to occur after Christmas was Allegiant Air with more than 50 minutes delays on Christmas. JetBlue Airways flight was also up there with delays that were consitently higher than other airlines throughout the week and delays that were on average 40-50 minutes the days after Christmas. Delta's average delays were less throughout the week, and hit around 20 minutes the day after Christmas. Another aspect to consider is that on Christmas day the average delays across all airlines were below 20 minutes. However, average delay rates spiked immediately after Christmas.
 
 # Research Question 3: How does the average delay time for the week of Christmas for both years compare to each other?
 
