@@ -21,12 +21,25 @@ execute:
 ---
 
 ## Introduction
+The holiday season is one of the busiest times of the year because everyone is traveling to see family, going on vacations, and getting away from the everyday chaos of life. With this, one of the biggest hurdles is transportation. Millions of individuals are either driving or flying during this time, creating an increase in traffic and delays nationwide. In particular, how many of you have seen headlines on the news stating, "Hundreds of Flights are Delayed Due to Holiday Rush?" Whether it be for Memorial Day weekend, Thanksgiving, Christmas, or any other holiday, various factors play a part in delays such as a flight's departure delay, arrival delay, weather delay, or carrier delay. There could also be overall flight diversions or cancellations that play a part in this. 
 
-## Literature Review
+In our report, we investigated flight delays during the Christmas Season. We have two specific datasets from the United States Department of Transportation compiled by the Bureau of Transformation Statistics. One dataset is from December 2020, and the other is from December 2023. 
 
-## Methodology 
+Both these datasets adhere to the FAIR principles. The datasets are findable and accessible to the general public since it is posted on an open-platform government website: [Flight Information](https://www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FGK&QO_fu146_anzr=b0-gvzr). The website provides a way to filter through what months, years, and columns a researcher wants to look into and descriptions for each, making the dataset reusable for various purposes. Then, after selecting the desired attributes, researchers can click the download button, saving to file as T_ONTIME_MARKETING.csv. This CSV format makes the file interoperable. 
+
+Both these datasets adhere to the CARE principles. By looking at the dataset, there are collective benefits since there are several research questions such as what flights/airlines have the most delays, etc that could be answered, helping travelers decide what airline to fly. Since this is a government dataset, the airlines have given consent to share flight information with individuals. Our data sets do not have sensitive data, allowing it to adhere to the responsible and ethical criteria.
+
+Within the December 2020 dataset, there are 397,208  cases, each representing individual flights. In comparison, December 2023 had 606,218 cases of flights. Notice how in December 2023 the number of flights almost doubled. This is because, in 2020, there was COVID-19, so the number of individuals traveling greatly decreased. Throughout our analysis, we want to compare these years and look at 25 attributes (later described in detail) such as delay times. 
+
+These are our main research questions:
+1. What is the average delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+2. What is the average delay time for the week of  Christmas 2020 for the top 10 most popular U.S. airlines?
+3. How does the average delay time for the week of Christmas for both years compare to each other? 
 
 ## Data Exploration
+Throughout our analysis, we want to compare both these years together and look at 25 attibutes YEAR, MONTH, DAY_OF_MONTH, DAY_OF_WEEK, FL_DATE, MKT_CARRIER_FL_NUM, OP_UNIQUE_CARRIER, ORIGIN_AIRPORT_ID, ORIGIN, ORIGIN_CITY_NAME, ORIGIN_STATE_ABR, DEST_AIRPORT_ID, DEST_CITY_NAME, DEST_STATE_ABR, DEP_TIME, DEP_DELAY_NEW, ARR_TIME, ARR_DELAY_NEW, CANCELLED, DIVERTED, FLIGHTS, DISTANCE, CARRIER_DELAY, WEATHER_DELAY, DIV_AIRPORT_LANDINGS. 
+
+## Methodology 
 
 ## Results
 
