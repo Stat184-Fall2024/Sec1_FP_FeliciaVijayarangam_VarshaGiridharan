@@ -68,7 +68,6 @@ Since this governmental dataset looks at all the flights traveling nationwide, w
 In our subset, we want to use the filter() in order to filter the original datasets with the whole month of December to the specific week of Christmas. Based on the columns, we decided to filter based on the Day of the Month. Now, we will have two new datasets with only the flights for Christmas week.
 
 ```{r}
-
 #Filter December 2020:
 christmas_week2020 <- flights2020 %>%
   filter(DAY_OF_MONTH >= 20 & DAY_OF_MONTH <= 27) 
@@ -79,7 +78,7 @@ christmas_week2023 <- flights2023 %>%
 
 ```
 
-We want to create a summary() functions to understanding the data types and distributions of each of the attributes represented. In order to have the summary() properly formatted and have all 34 attributes fit into the pdf, we flipped the rows and the column values. With this, now the columns are the summary statistics and the rows are the data sets attributes. Therefore we used the tranpose function t(). To create a summary table, we used the kable(), kable_styling(), column_spec(), and row_spec() for styling. We also needed the package kableExtra().
+We want to create summary() functions to understanding the data types and distributions of each of the attributes represented. In order to have the summary() properly formatted and have all 34 attributes fit into the pdf, we flipped the rows and the column values. With this, now the columns are the summary statistics and the rows are the data sets attributes. Therefore we used the tranpose function t(). To create a summary table, we used the kable(), kable_styling(), column_spec(), and row_spec() for styling. We also needed the package kableExtra().
 
 In the first table, we see the flight summary table for the week of Christmas in 2020.
 
@@ -129,6 +128,114 @@ kable(summary2023_transposed, caption = "Flight Summary Table of Christmas Week 
   column_spec(2:ncol(summary2023_transposed), width = "1.5cm") %>% # Adjust other columns
   row_spec(0, bold = TRUE, background = "#D3D3D3") # Style header row
 ```
+
+At a high level, this table helps us pinpoint what attributes are most meaningful for us to analyze and compare performance against. There are various categorical variables such as year, day of the month, OP unique carrier, OP carrier, OP carrier flight number, origin, city name, destination, and such. For numerical values, keep in mind what they represent. For example, ID is a numerical value, but it is categorical in this case. Each airport has a specific ID number, so the mean, median, and such do not mean anything. However, the numerical numbers such as departure delays, arrival delays, flights carrier delays, weather delays, NAS delays, security delays, late aircraft delays, and diverted airport delays do matter. In our research questions, we can use these numerical attributes as checkpoints to see how airlines performance is compared to each other.
+
+With these thoughts in mind, let us begin answering our research questions.
+
+# Research Question 1:  What is the average departure delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
+
+Before we answer this question. Let us understand what we are being asked to do. We want to find the average departure delay time for each day of Christmas week based on the top ten airlines. In the dataset that we have, the airlines are represented by the OP_UNIQUE_CARRIER column. However, our dataset does not provide a key to what letters and numbers represents a specific airline. Therefore, we found a new data source with two column, one of airline codes and the other with airline names.
+
+```{r}
+#| echo: False
+#| message: False
+# Data Source 2
+code <- "C:/Users/felic/Downloads/L_UNIQUE_CARRIERS.csv" 
+airlineCode <- read.csv(code)
+```
+
+With this information, we could use the left_join() to create a new dataset with a new column of airline names. The logic behind this was that we needed to left_join() by the condition that the new data sources code matched the orginal's **unique carrier code**.
+
+```{r}
+# Merge the datasets based on the airline code
+airlineInfo2020 <- christmas_week2020 %>%
+  left_join(airlineCode, by = c("OP_UNIQUE_CARRIER" = "Code"))
+```
+
+Now that we have the specific airline names, we need to calculate the average airline delay based on the top 10 airlines. We need to group_by() the airline name and days of the week because we want to differentiate what departure delays the various airlines are experiencing the week of Christmas.
+
+The average delay can be found by applying the mean() to departure delay. In order to ensure that our graph is clear to read, we decided to only plot a few airlines. In this case, we choose the top ten airlines according to the based on the https://airadvisor.com/en/top-us-airlines-rating website.
+
+```{r}
+# Calculate the average delay time by airline
+avgDelay_airlineDay2020 <- airlineInfo2020 %>%
+  group_by(Description, DAY_OF_MONTH) %>%
+  summarize(AverageDelay = mean(DEP_DELAY_NEW, na.rm = TRUE), .groups = "drop")
+
+specific_airlines <- c("Delta Air Lines Inc.", "Alaska Airlines Inc.", "Hawaiian Airlines Inc.", 
+                       "United Air Lines Inc.", "American Airlines Inc.", "JetBlue Airways", 
+                       "Southwest Airlines Co.", "Spirit Airlines", "Allegiant Air",
+                       "Frontier Airlines Inc.")
+```
+
+Then, we created a bar graph using ggplot that filtered the graph based on the airline name and graphed 10 various colored bars for each day represents a different airline.
+
+```{r}
+#| echo: False
+#| message: False
+#Plotting Average 
+ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines), 
+       aes(x = factor(DAY_OF_MONTH), y = AverageDelay, fill = Description)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +
+  labs(title = "Average Departure Delay by Airline for Christmas Week 2020",
+       x = "Days of Christmas Week",
+       y = "Average Delay (Minutes)",
+       fill = "Airline") +
+  theme_minimal() +
+  theme(
+     plot.title = element_text(hjust = 0.5, size = 10), 
+    legend.position = "bottom")  
+```
+
+*Analysis*: Looking at our x and y axis, we can see that Alaska Airlines Inc. had consistently low average departure delays that were less that 5 minutes. the Hawaiian Airlines Inc were also on the low end when it came to average departure delays since they were less than 10 minutes. The the other hand, Allegiant Air had the most delays by far, leading to an average more than 30 minutes on December 27. JetBlue Airways flight delays were also high compared to other flights, especially since they had an average departure delay of more than 20 minutes on December 27. Another aspect to consider is that the the average delays across airlines were the lowest on the 22. Also, the average delay rates spiked Christmas day and the days after.
+
+# Research Question 2:  What is the average departure delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+
+To answer this research question, we follow a similar format as the previous question. First, we need to merge the 2023 Christmas week using the left_join() to get the airline name that corresponded to the existing columns airline code.
+
+```{r}
+#| echo: False
+#| message: False
+# Merge the datasets based on the airline code
+airlineInfo2023 <- christmas_week2023 %>%
+  left_join(airlineCode, by = c("OP_UNIQUE_CARRIER" = "Code"))
+```
+
+The next step is to use the group_by() and summarize() to find the average delay each day based on the airlines in 2023.
+
+```{r}
+#| echo: False
+#| message: False
+# Calculate the average delay time by airline
+avgDelay_airlineDay2023 <- airlineInfo2023 %>%
+  group_by(Description, DAY_OF_MONTH) %>%
+  summarize(AverageDelay2023 = mean(DEP_DELAY_NEW, na.rm = TRUE), .groups = "drop")
+
+specific_airlines2023 <- c("Delta Air Lines Inc.", "Alaska Airlines Inc.", "Hawaiian Airlines Inc.", 
+                       "United Air Lines Inc.", "American Airlines Inc.", "JetBlue Airways", 
+                       "Southwest Airlines Co.", "Spirit Airlines", "Allegiant Air",
+                       "Frontier Airlines Inc.")
+```
+
+```{r}
+#| echo: False
+#| message: False
+#Plotting Average 
+ggplot(avgDelay_airlineDay2023 %>% filter(Description %in% specific_airlines2023), 
+       aes(x = factor(DAY_OF_MONTH), y = AverageDelay2023, fill = Description)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +
+  labs(title = "Average Departure Delay by Airline for Christmas Week 2023",
+       x = "Days of Christmas Week",
+       y = "Average Delay (Minutes)",
+       fill = "Airline") +
+  theme_minimal() +
+  theme(
+     plot.title = element_text(hjust = 0.5, size = 10), 
+    legend.position = "bottom")  
+```
+
+# Research Question 3: How does the average delay time for the week of Christmas for both years compare to each other?
 
 # Methodology
 
