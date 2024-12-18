@@ -30,7 +30,9 @@ These are our main research questions:
 
 2.  What is the average delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
 
-3.  How does the average delay time for the week of Christmas for both years compare to each other?
+3.  In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
+
+4.  What are the Air Travel Routes that are most impacted by the departing delays at the Philadelphia Airport?
 
 # Data Inventory
 
@@ -129,6 +131,8 @@ kable(summary2023_transposed, caption = "Flight Summary Table of Christmas Week 
   row_spec(0, bold = TRUE, background = "#D3D3D3") # Style header row
 ```
 
+**Table Insights:**
+
 At a high level, this table helps us pinpoint what attributes are most meaningful for us to analyze and compare performance against. There are various categorical variables such as year, day of the month, OP unique carrier, OP carrier, OP carrier flight number, origin, city name, destination, and such. For numerical values, keep in mind what they represent. For example, ID is a numerical value, but it is categorical in this case. Each airport has a specific ID number, so the mean, median, and such do not mean anything. However, the numerical numbers such as departure delays, arrival delays, flights carrier delays, weather delays, NAS delays, security delays, late aircraft delays, and diverted airport delays do matter. In our research questions, we can use these numerical attributes as checkpoints to see how airlines performance is compared to each other.
 
 With these thoughts in mind, let us begin answering our research questions.
@@ -184,7 +188,7 @@ ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines),
        fill = "Airline") +
   theme_minimal() +
   theme(
-     plot.title = element_text(hjust = 0.5, size = 15), 
+     plot.title = element_text(hjust = 0.5, size = 10), 
      legend.position = "bottom",
      legend.text = element_text(size = 5))  
 ```
@@ -232,7 +236,7 @@ ggplot(avgDelay_airlineDay2023 %>% filter(Description %in% specific_airlines2023
        fill = "Airline") +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5, size =15 ), 
+    plot.title = element_text(hjust = 0.5, size =10 ), 
     legend.position = "bottom",
     legend.text = element_text(size = 5)
   )
@@ -278,7 +282,7 @@ Once we create this subset, we can use the kable() and kable_styling() to adjust
 #| echo: False
 #| message: False
 # PDF output Table
-kable(avgDelayAlleg2023, caption = "Average Delay in Minutes Based on Types of Delays for the Top Ten Airlines Christmas Week 2023") %>%
+kable(avgDelayAlleg2023, caption = "Average Delay (in minutes) Based on Types of Delays for the Top 10 Airlines Christmas Weeks 2023") %>%
   kable_styling(
     latex_options = c("striped", "scale_down"),  # Use LaTeX-specific options
     font_size = 8,                               # Adjust font size
@@ -286,7 +290,17 @@ kable(avgDelayAlleg2023, caption = "Average Delay in Minutes Based on Types of D
   ) 
 ```
 
-# Methodology
+**Table Insights:**
+
+Looking at the Average Delay Table, we see that for the average departure delay, Hawaiian Airlines has the lowest around 8.17 minutes. On the other hand, JetBlue Airways has the highest around 27.38 minutes. For arrival delays, Delta has a average delay around 8.70 minutes. This is slightly less than Hawaiian Airline Inc., which was an average arrival delay around 8.93 minutes. JetBlue airlines is consistently higher average arrival delay with 25.12 minutes.
+
+Now, looking at other factors like Carrier delay, on average Delta has the highest with 40.05 minutes, while Southwest Airline Co. has the lowest carrier delay of 15.07 minutes. The average weather delays for Allegiant Air was the highest with 14.40 minutes, and Hawaiian Airlines had the lowest average delay with 0.64 minutes. Looking at the National Aviation System delay, Hawaiian Airlines has the lowest with 0.75 average minutes, and Allegiant Air has the highest with 16.92 minutes. Looking at a security delay, Frontier, Hawaiian, and United Air Lines had no security delays, while Alaska Airlines had the highest 0.42 minutes. Hawaiian airlines had the lowest average late aircraft with 12.55 minutes, while Alliegiant Air had the highest with average 41.54 minutes delays.
+
+Finally, looking at the diverted flight delays, Hawaiian Airlines had the lowest average delay around 200 minutes, while Delta had the highest around 504 average minutes delayed.
+
+**Based on this information, we can conclude that the performance of the Hawaiian Airlines were by far the best in the week of Christmas 2023.**
+
+# Research Question 4: What are the Air Travel Routes that are most impacted by the departing delays at the Philadelphia Airport?
 
 # Results
 
