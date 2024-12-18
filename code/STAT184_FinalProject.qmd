@@ -191,7 +191,7 @@ ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines),
 
 **Graphical Insight**: Looking at our x and y axis, we can see that Alaska Airlines Inc. had consistently low average departure delays that were less that 5 minutes. the Hawaiian Airlines Inc were also on the low end when it came to average departure delays since they were less than 10 minutes. The the other hand, Allegiant Air had the most delays by far, leading to an average more than 30 minutes on December 27. JetBlue Airways flight delays were also high compared to other flights, especially since they had an average departure delay of more than 20 minutes on December 27. Another aspect to consider is that the the average delays across airlines were the lowest on the 22. Also, the average delay rates spiked Christmas day and the days after.
 
-# Research Question 2:  What is the Average Departure Delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+# Research Question 2:  What is the Average Departure Delay time for the week of Christmas 2023 for the Top 10 most popular U.S. airlines?
 
 To answer this research question, we follow a similar format as the previous question. First, we need to merge the 2023 Christmas week using the left_join() to get the airline name that corresponded to the existing columns airline code.
 
@@ -249,51 +249,41 @@ In 2020, the majority of airlines experienced average delay around 4-10 minutes 
 
 We must also keep in mind that the number of people flying in 2020 was severely reduced due to COVID-19 restrictions and uncertainty. So, could conclude that in 2023, along with the overall U.S. welfare and economy, there was a higher average delay times for the majority of the top ten airlines compared to 2020.
 
-# Research Question 3: In 2023, what was the percentage of how the Overall delays were distributed for Allegiance Air During the week of Christmas?
+# Research Question 3: In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
+
+In our dataset, we are given various types of delays such as departure, arrival, carrier, weather, NAS, security, late aircraft, and diverted. We were curious to see what the average delay time in minutes would be for each airline. In order to do this, we want to create a dataset using the filter(), group(), and summarize(). The filter() filters by the top ten airlines that we previously discussed. The group_by() can be used to group our main dataset based on the airline names. Then, with the summarize(), we can use the mean() to get the average delay values.
+
+```{r}
+# Calculate average delays for Allegiant Air
+avgDelayAlleg2023 <- airlineInfo2023 %>%
+  filter(Description %in% specific_airlines2023) %>%
+  group_by(Description) %>%
+  summarize(
+    Departure = mean(DEP_DELAY_NEW, na.rm = TRUE),
+    Arrival = mean(ARR_DELAY_NEW, na.rm = TRUE),
+    Carrier = mean(CARRIER_DELAY, na.rm = TRUE),
+    Weather = mean(WEATHER_DELAY, na.rm = TRUE),
+    NAS = mean(NAS_DELAY, na.rm = TRUE),
+    Security = mean(SECURITY_DELAY, na.rm = TRUE),
+    LateAircraft = mean(LATE_AIRCRAFT_DELAY, na.rm = TRUE),
+    Diverted = mean(DIV_ARR_DELAY, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+```
+
+Once we create this subset, we can use the kable() and kable_styling() to adjust the table format, font size, and etc. Once we do this, we will get the following table:
 
 ```{r}
 #| echo: False
 #| message: False
-# Calculate average delays for Allegiant Air
-avgDelayAlleg2023 <- airlineInfo2023 %>%
-  filter(Description %in% "Allegiant Air") %>%
-  group_by(Description) %>%
-  summarize(
-    avgDepDelay = mean(DEP_DELAY_NEW, na.rm = TRUE),
-    avgArrDelay = mean(ARR_DELAY_NEW, na.rm = TRUE),
-    avgCarrDelay = mean(CARRIER_DELAY, na.rm = TRUE),
-    avgWeaDelay = mean(WEATHER_DELAY, na.rm = TRUE),
-    avgNasDelay = mean(NAS_DELAY, na.rm = TRUE),
-    avgSecDelay = mean(SECURITY_DELAY, na.rm = TRUE),
-    avgLateAirDelay = mean(LATE_AIRCRAFT_DELAY, na.rm = TRUE),
-    #avgDivDelay = mean(DIV_ARR_DELAY, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-# Reshape the data and calculate percentages
-delayData <- avgDelayAlleg2023 %>%
-  pivot_longer(cols = starts_with("avg"), 
-               names_to = "DelayType", 
-               values_to = "AverageDelay") %>%
-  mutate(
-    prop = (AverageDelay / sum(AverageDelay)) * 100,  # Calculate percentage
-    lab.ypos = cumsum(prop) - 0.5 * prop             # Label position
-  )
-
-# Round percentages for display
-delayData <- delayData %>%
-  mutate(roundPer = round(prop, digits = 2))
-
-# Create Pie Chart
-
-ggplot(delayData, aes(x = "", y = prop, fill = DelayType)) +
-  geom_col(color = "black") +
-  geom_text(aes(label = roundPer),
-            position = position_stack(vjust = 0.5)) +
-  coord_polar(theta = "y") +                      # Use custom colors
-  theme_void() +    
-  scale_fill_brewer(palette="Pastel1")+
-  labs(title = "Proportion of Delay Types for Allegiant Air (2023)", fill = "Delay Type") 
+# PDF output Table
+kable(avgDelayAlleg2023, caption = "Average Delay in Minutes Based on Types of Delays for the Top Ten Airlines Christmas Week 2023") %>%
+  kable_styling(
+    latex_options = c("striped", "scale_down"),  # Use LaTeX-specific options
+    font_size = 8,                               # Adjust font size
+    position = "center"                          # Align to center by default
+  ) 
 ```
 
 # Methodology
