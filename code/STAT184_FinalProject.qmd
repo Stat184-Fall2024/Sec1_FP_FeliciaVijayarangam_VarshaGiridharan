@@ -312,7 +312,9 @@ Finally, looking at the diverted flight delays, Hawaiian Airlines had the lowest
 
 **Based on this information, we can conclude that the performance of the Hawaiian Airlines were by far the best in the week of Christmas 2023.**
 
-# Research Question 4: What are the Air Travel Routes that are most impacted by the Departure delays at the Philadelphia Airport?
+# Research Question 4: What are the Top 5 Most Popular Air Travel Routes Departure Delays at the Philadelphia Airport?
+
+In order to look at the
 
 ```{r}
 #| echo: False
@@ -429,7 +431,7 @@ ggplot() +
   ) +
   theme_void() + 
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 10),
     plot.subtitle = element_text(hjust = 0.5, size = 10),
     plot.caption = element_text(hjust = 1, size = 8)
   )
