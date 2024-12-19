@@ -459,6 +459,8 @@ Looking at the code, we can see that the top ten number of flights go to Texas, 
 
 # Research Question 5: How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
 
+For the following graph, I first identified the top 10 busiest airports during the Christmas week of 2023 by grouping the data by airport (ORIGIN), calculating the number of flights, and determining the average delays. I then filtered the dataset to include only these airports and merged the 2023 data with the corresponding year information. To compare weather delays between 2020 and 2023, I used bind_rows() to combine the two datasets and filtered for the top 10 airports from 2023. I grouped the data by airport and year, calculated the mean weather delay, and visualized the results in a bar chart where the x-axis shows the mean weather delays, the y-axis represents airports, and the bars are split by year for comparison.
+
 ```{r}
 # 1. Find most popular airports in the week of Christmas for 2023 
 
@@ -523,6 +525,9 @@ bind_rows(
 This bar chart compares the mean weather-related delays at the top 10 busiest airports during the Christmas week (20th-27th December) for the years 2020 and 2023. Notable differences are observed at airports like Los Angeles (LAX), San Francisco (SFO), and Seattle (SEA), where weather delays in 2020 were significantly higher. All of these airports are located on the West Coast, suggesting that weather-related delays in 2020 may have been influenced by common regional weather factors such as winter storms or heavy rain. This trend highlights airports where weather conditions during the holiday season posed considerable operational challenges, with 2020 showing a notably more disruptive impact on flight schedules at these locations compared to 2023.
 
 # Research Question 6: How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
+
+For this graph, I followed a similar approach to Research Question 5, but focused on comparing delays between Pittsburgh (PIT) and Philadelphia (PHL) during Christmas week in 2020 and 2023. After combining the two datasets using bind_rows(), I filtered the data for these two airports and the dates between December 20th and 27th. I then used pivot_longer() to reshape the delay data into a longer format, splitting it by delay type (carrier and weather). The data was grouped by day, airport, delay type, and year, and the mean delay was calculated. The results were visualized in a bar chart, with separate bars for each day and airport, allowing for a direct comparison of delay types and year-on-year differences between Pittsburgh and Philadelphia.
+
 
 ```{r}
 bind_rows(
