@@ -41,6 +41,7 @@ In order to start answering these research questions, we first need to load the 
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 #Load December Datasets and Additional Packages
 library(ggplot2)
 library(dplyr)
@@ -62,6 +63,7 @@ Throughout our analysis, we want to compare both these years together and look a
 
 ```{r}
 #| echo: False
+#| warning: False
 colnames(flights2023)
 ```
 
@@ -70,6 +72,7 @@ Since this governmental dataset looks at all the flights traveling nationwide, w
 In our subset, we want to use the filter() in order to filter the original datasets with the whole month of December to the specific week of Christmas. Based on the columns, we decided to filter based on the Day of the Month. Now, we will have two new datasets with only the flights for Christmas week.
 
 ```{r}
+#| warning: False
 #Filter December 2020:
 christmas_week2020 <- flights2020 %>%
   filter(DAY_OF_MONTH >= 20 & DAY_OF_MONTH <= 27) 
@@ -87,7 +90,7 @@ In the first table, we see the flight summary table for the week of Christmas in
 ```{r}
 #| echo: False
 #| message: False
-
+#| warning: False
 # Load required libraries
 library(kableExtra)
 
@@ -114,7 +117,7 @@ In the second table, we see the flight summary table for the week of Christmas i
 ```{r}
 #| echo: False
 #| message: False
-
+#| warning: False
 # Flight Summary Table for Christmas week in 2023
 summary2023 <- summary(christmas_week2023)
 summary2023_transposed <- t(summary2023)
@@ -144,6 +147,7 @@ Before we answer this question. Let us understand what we are being asked to do.
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 # Data Source 2
 code <- "C:/Users/felic/Downloads/L_UNIQUE_CARRIERS.csv" 
 airlineCode <- read.csv(code)
@@ -152,6 +156,7 @@ airlineCode <- read.csv(code)
 With this information, we could use the left_join() to create a new dataset with a new column of airline names. The logic behind this was that we needed to left_join() by the condition that the new data sources code matched the orginal's **unique carrier code**.
 
 ```{r}
+#| warning: False
 # Merge the datasets based on the airline code
 airlineInfo2020 <- christmas_week2020 %>%
   left_join(airlineCode, by = c("OP_UNIQUE_CARRIER" = "Code"))
@@ -162,6 +167,7 @@ Now that we have the specific airline names, we need to calculate the average ai
 The average delay can be found by applying the mean() to departure delay. In order to ensure that our graph is clear to read, we decided to only plot a few airlines. In this case, we choose the top ten airlines according to the based on the https://airadvisor.com/en/top-us-airlines-rating website.
 
 ```{r}
+#| warning: False
 # Calculate the average delay time by airline
 avgDelay_airlineDay2020 <- airlineInfo2020 %>%
   group_by(Description, DAY_OF_MONTH) %>%
@@ -178,6 +184,7 @@ Then, we created a bar graph using ggplot that filtered the graph based on the a
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 #Plotting Average 
 ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines), 
        aes(x = factor(DAY_OF_MONTH), y = AverageDelay, fill = Description)) +
@@ -202,6 +209,7 @@ To answer this research question, we follow a similar format as the previous que
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 # Merge the datasets based on the airline code
 airlineInfo2023 <- christmas_week2023 %>%
   left_join(airlineCode, by = c("OP_UNIQUE_CARRIER" = "Code"))
@@ -212,6 +220,7 @@ The next step is to use the group_by() and summarize() to find the average delay
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 # Calculate the average delay time by airline
 avgDelay_airlineDay2023 <- airlineInfo2023 %>%
   group_by(Description, DAY_OF_MONTH) %>%
@@ -226,6 +235,7 @@ specific_airlines2023 <- c("Delta Air Lines Inc.", "Alaska Airlines Inc.", "Hawa
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 #Plotting Average 
 ggplot(avgDelay_airlineDay2023 %>% filter(Description %in% specific_airlines2023), 
        aes(x = factor(DAY_OF_MONTH), y = AverageDelay2023, fill = Description)) +
@@ -258,6 +268,7 @@ We must also keep in mind that the number of people flying in 2020 was severely 
 In our dataset, we are given various types of delays such as departure, arrival, carrier, weather, NAS, security, late aircraft, and diverted. We were curious to see what the average delay time in minutes would be for each airline. In order to do this, we want to create a dataset using the filter(), group(), and summarize(). The filter() filters by the top ten airlines that we previously discussed. The group_by() can be used to group our main dataset based on the airline names. Then, with the summarize(), we can use the mean() to get the average delay values.
 
 ```{r}
+#| warning: False
 # Calculate average delays for Allegiant Air
 avgDelayAlleg2023 <- airlineInfo2023 %>%
   filter(Description %in% specific_airlines2023) %>%
@@ -281,6 +292,7 @@ Once we create this subset, we can use the kable() and kable_styling() to adjust
 ```{r}
 #| echo: False
 #| message: False
+#| warning: False
 # PDF output Table
 kable(avgDelayAlleg2023, caption = "Average Delay (in minutes) Based on Types of Delays for the Top 10 Airlines Christmas Weeks 2023") %>%
   kable_styling(
@@ -300,9 +312,129 @@ Finally, looking at the diverted flight delays, Hawaiian Airlines had the lowest
 
 **Based on this information, we can conclude that the performance of the Hawaiian Airlines were by far the best in the week of Christmas 2023.**
 
-# Research Question 4: What are the Air Travel Routes that are most impacted by the departing delays at the Philadelphia Airport?
+# Research Question 4: What are the Air Travel Routes that are most impacted by the Departure delays at the Philadelphia Airport?
 
-# Results
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+library(ggplot2)
+library(ggmap)
+
+# Load airport data with IATA codes, latitude, and longitude
+airports <- read.csv("C:/Users/felic/Downloads/us-airports.csv")
+
+airports_coords <- airports %>%
+  select(latitude_deg, iata_code, latitude_deg, longitude_deg)
+
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+# Merge latitude/longitude with original data for ORIGIN
+flight_with_coords <- airlineInfo2023 %>%
+  left_join(airports_coords, by = c("ORIGIN" = "iata_code")) %>%
+  rename(
+    originLat = latitude_deg,
+    originLong = longitude_deg,
+  )
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+# Merge latitude and longitude for DESTINATION
+flight_with_coords <- flight_with_coords %>%
+  left_join(airports_coords, by = c("DEST" = "iata_code")) %>%
+  rename(
+    destLat = latitude_deg,
+    destLong = longitude_deg
+  )
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+phl_departures <- flight_with_coords %>%
+  filter(ORIGIN == "PHL", DEP_DELAY_NEW >0) %>%
+  group_by(DEST)  %>%
+  mutate(
+    destLong = as.numeric(destLong),
+    destLat = as.numeric(destLat),
+    originLong = as.numeric(originLong),
+    originLat = as.numeric(originLat)
+  )
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+# Count the number of flights to each destination (DEST)
+top_destinations <- phl_departures %>%
+  count(DEST) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+# Filter data to keep only top 5 destinations
+phl_top_10 <- phl_departures %>%
+  filter(DEST %in% top_destinations$DEST)
+```
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
+# Define the U.S. map
+library(ggrepel)
+us_map <- borders("state", colour = "gray70", fill = "gray95")
+
+# Plot the map with Philadelphia as the origin and arrows to the top 5 destinations
+ggplot() + 
+  us_map + 
+  geom_point(
+    data = phl_top_10, 
+    aes(x = destLong, y = destLat), 
+    col = "#970027", size = 2
+  ) +  # Add destination points
+  geom_text_repel(
+    data = phl_top_10, 
+    aes(x = destLong, y = destLat, label = DEST), 
+    col = "black", size = 3, segment.color = "gray70"
+  ) +  # Add labels for destinations
+  geom_curve(
+    data = phl_top_10, 
+    aes(x = originLong, y = originLat, xend = destLong, yend = destLat), 
+    col = "#b29e7d", size = 0.8, curvature = 0.3
+  ) +  # Add arrows (curved lines) from Philadelphia to the top 5 destinations
+  geom_point(
+    data = phl_departures %>% filter(ORIGIN == "PHL"), 
+    aes(x = originLong, y = originLat), 
+    color = "blue", size = 8, shape = 21
+  ) +  # Mark Philadelphia (PHL) with a blue dot
+  labs(
+    title = "Top 10 Destinations from Philadelphia (PHL) Based on Number of Flights",
+    subtitle = "Flight Routes with Arrows to Popular Destinations",
+    caption = "Source: Airline Data"
+  ) +
+  theme_void() + 
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+    plot.subtitle = element_text(hjust = 0.5, size = 10),
+    plot.caption = element_text(hjust = 1, size = 8)
+  )
+
+```
 
 # Conclusions
 
