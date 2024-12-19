@@ -461,21 +461,27 @@ Looking at the code, we can see that the top ten number of flights go to Texas, 
 
 # Conclusions
 
-Overall in our analysis, we were able to answer the following questions:
+Based on all the analysis that we have done, we have learned more about the how various types of delays that impact a flights/airline performance. We saw how various types of airline perform on average comparing it to each other. We also were able to look at how their performance was in 2020 compared to 2023.
 
-1.  What is the average delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
+We hope you all learned something from our analysis!
 
-2.  What is the average delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+*Contact:*
 
-3.  In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
+Felicia Vijayarangam: fpv5026\@psu.edu
 
-4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
-
-5.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
-
-6.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
+Varsha Giridharan: vpg5172\@psu.edu
 
 # References
+
+“10 Best Airlines in US - Top Carrier Rankings 2023 by Air...” AirAdvisor, 2023, airadvisor.com/en/top-us-airlines-rating.
+
+“Airports in United States of America - Humanitarian Data Exchange.” Data.humdata.org, data.humdata.org/dataset/ourairports-usa.
+
+“Download Page.” Bts.gov, 2017, www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FGK&QO_fu146_anzr=b0-gvzr.
+
+Cnn.com, 2024, media.cnn.com/api/v1/images/stellar/prod/230221184248-christmas-flight-cancellation-221223.jpg?c=16x9&q=w_800. Accessed 19 Dec. 2024.
+
+\newpage
 
 # Code Appendix
 
