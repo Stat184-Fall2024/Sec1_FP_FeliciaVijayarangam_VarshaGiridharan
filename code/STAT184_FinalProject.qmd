@@ -34,6 +34,10 @@ These are our main research questions:
 
 4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
 
+5.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
+
+6.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
+
 # Data Inventory
 
 In order to start answering these research questions, we first need to load the December 2020 and December 2023 data set and the libraries needed for our data visualization. In this case, we will use libraries such dplyr, tidyr, kableExtra, stringr, ggplot2, scales, knitr, readr. Once we have these libraries, we can proceed to the data exploration step.
@@ -140,7 +144,9 @@ At a high level, this table helps us pinpoint what attributes are most meaningfu
 
 With these thoughts in mind, let us begin answering our research questions.
 
-# Research Question 1:  What is the Average Departure Delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
+\newpage
+
+# Research Question 1: What is the Average Departure Delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
 
 Before we answer this question. Let us understand what we are being asked to do. We want to find the average departure delay time for each day of Christmas week based on the top ten airlines. In the dataset that we have, the airlines are represented by the OP_UNIQUE_CARRIER column. However, our dataset does not provide a key to what letters and numbers represents a specific airline. Therefore, we found a new data source with two column, one of airline codes and the other with airline names.
 
@@ -202,7 +208,9 @@ ggplot(avgDelay_airlineDay2020 %>% filter(Description %in% specific_airlines),
 
 **Graphical Insight**: Looking at our x and y axis, we can see that Alaska Airlines Inc. had consistently low average departure delays that were less that 5 minutes. the Hawaiian Airlines Inc were also on the low end when it came to average departure delays since they were less than 10 minutes. The the other hand, Allegiant Air had the most delays by far, leading to an average more than 30 minutes on December 27. JetBlue Airways flight delays were also high compared to other flights, especially since they had an average departure delay of more than 20 minutes on December 27. Another aspect to consider is that the the average delays across airlines were the lowest on the 22. Also, the average delay rates spiked Christmas day and the days after.
 
-# Research Question 2:  What is the Average Departure Delay time for the week of Christmas 2023 for the Top 10 most popular U.S. airlines?
+\newpage
+
+# Research Question 2: What is the Average Departure Delay time for the week of Christmas 2023 for the Top 10 most popular U.S. airlines?
 
 To answer this research question, we follow a similar format as the previous question. First, we need to merge the 2023 Christmas week using the left_join() to get the airline name that corresponded to the existing columns airline code.
 
@@ -257,11 +265,13 @@ ggplot(avgDelay_airlineDay2023 %>% filter(Description %in% specific_airlines2023
 
 In the graph above, the Hawaiian Airlines had the lowest average delays by far. Their average was consistently below 10 minutes throughout the entire week. Next, Alaska Airlines Inc. had consistently low average departure delays that are normally below 10-20 minutes. The airlines with high average delays seemed to occur after Christmas was Allegiant Air with more than 50 minutes delays on Christmas. JetBlue Airways flight was also up there with delays that were consitently higher than other airlines throughout the week and delays that were on average 40-50 minutes the days after Christmas. Delta's average delays were less throughout the week, and hit around 20 minutes the day after Christmas. Another aspect to consider is that on Christmas day the average delays across all airlines were below 20 minutes. However, average delay rates spiked immediately after Christmas.
 
-## **Reflection on Research Question 1 and 2:** 
+## **Reflection on Research Question 1 and 2:**
 
 In 2020, the majority of airlines experienced average delay around 4-10 minutes leading up to Christmas day. One of the exceptions to this is the JetBlue Airways who had an average delay time around 15 minutes on December 20th. Even with these exceptions, the average delay time is significant less that the average delay time in 2023. The majority of airlines experienced an average delay time around between 8-15 minutes. JetBlue Airways repeatedly surpassed this, having a average departure delay around above 20 minutes for the weeks leading up to Christmas. From a broad lens, the rush after Christmas is high for both years. However, the top airlines who had the most avergae departure delays were consistently JetBlue Airways and Allegiant Air. In 2020, Allegiant Air had an average departure delay of 25 minutes on the 26th and 32 minutes on the 27th. In 2023, Allegiant Air had an average departure delay of 50 minutes on the 26th and 50 minutes on the 27th. Continuing onto JetBlue Airways, the average departure delay was around 21 minutes on the 26th and 17th minutes on the 27th. However, in 2023, they experienced an average departure delay time of 45 minutes on 26th and 51 minutes on the 27th.
 
 We must also keep in mind that the number of people flying in 2020 was severely reduced due to COVID-19 restrictions and uncertainty. So, could conclude that in 2023, along with the overall U.S. welfare and economy, there was a higher average delay times for the majority of the top ten airlines compared to 2020.
+
+\newpage
 
 # Research Question 3: In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
 
@@ -311,6 +321,8 @@ Now, looking at other factors like Carrier delay, on average Delta has the highe
 Finally, looking at the diverted flight delays, Hawaiian Airlines had the lowest average delay around 200 minutes, while Delta had the highest around 504 average minutes delayed.
 
 **Based on this information, we can conclude that the performance of the Hawaiian Airlines were by far the best in the week of Christmas 2023.**
+
+\newpage
 
 # Research Question 4: What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
 
@@ -443,7 +455,25 @@ ggplot() +
 
 ```
 
+Looking at the code, we can see that the top ten number of flights go to Texas, Georgia, Florida, Illinois, Tennessee, Massachusetts, Colorado, and North Carolina. Then, we can further see that since three of the airports in Florida have high number of flights, showing that Florida is one of the popular destination spots.
+
+\newpage
+
 # Conclusions
+
+Overall in our analysis, we were able to answer the following questions:
+
+1.  What is the average delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
+
+2.  What is the average delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+
+3.  In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
+
+4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
+
+5.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
+
+6.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
 
 # References
 
