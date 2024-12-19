@@ -528,7 +528,6 @@ This bar chart compares the mean weather-related delays at the top 10 busiest ai
 
 For this graph, I followed a similar approach to Research Question 5, but focused on comparing delays between Pittsburgh (PIT) and Philadelphia (PHL) during Christmas week in 2020 and 2023. After combining the two datasets using bind_rows(), I filtered the data for these two airports and the dates between December 20th and 27th. I then used pivot_longer() to reshape the delay data into a longer format, splitting it by delay type (carrier and weather). The data was grouped by day, airport, delay type, and year, and the mean delay was calculated. The results were visualized in a bar chart, with separate bars for each day and airport, allowing for a direct comparison of delay types and year-on-year differences between Pittsburgh and Philadelphia.
 
-
 ```{r}
 bind_rows(
   christmas_week2023 %>% mutate(Year = 2023),
@@ -558,21 +557,21 @@ This bar chart compares the mean weather-related delays at the top 10 busiest ai
 
 Overall in our analysis, we were able to answer the following questions:
 
-1.  What is the average delay time for the week of Christmas 2020 for the top 10 most popular U.S. airlines?
+In the first few research questions we focused on looking and comparing airline performance with each other and based on various years. We also looked at the various locations that people are traveling.
 
-2.  What is the average delay time for the week of Christmas 2023 for the top 10 most popular U.S. airlines?
+1.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023? Significant weather delays in 2020 were observed, especially at West Coast airports like LAX, SFO, and SEA, where storms may have had a disruptive impact on flight schedules. In 2023, these weather delays were notably lower—an indication of improvement in weather conditions or even operational preparedness.
 
-3.  In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
-
-4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
-
-5.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
-Significant weather delays in 2020 were observed, especially at West Coast airports like LAX, SFO, and SEA, where storms may have had a disruptive impact on flight schedules. In 2023, these weather delays were notably lower—an indication of improvement in weather conditions or even operational preparedness.
-
-6.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
-The analysis for PIT and PHL highlighted similar patterns in weather and carrier delays across both years, with 2020 showing more erratic delay patterns, especially around December 24th, likely due to weather conditions over the region. In 2023, delays were generally more consistent across the days of the week.
+2.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020? The analysis for PIT and PHL highlighted similar patterns in weather and carrier delays across both years, with 2020 showing more erratic delay patterns, especially around December 24th, likely due to weather conditions over the region. In 2023, delays were generally more consistent across the days of the week.
 
 # References
+
+“10 Best Airlines in US - Top Carrier Rankings 2023 by Air...” *AirAdvisor*, 2023, airadvisor.com/en/top-us-airlines-rating.
+
+“Airports in United States of America - Humanitarian Data Exchange.” *Data.humdata.org*, data.humdata.org/dataset/ourairports-usa.
+
+“Download Page.” *Bts.gov*, 2017, www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FGK&QO_fu146_anzr=b0-gvzr.
+
+*Cnn.com*, 2024, media.cnn.com/api/v1/images/stellar/prod/230221184248-christmas-flight-cancellation-221223.jpg?c=16x9&q=w_800. Accessed 19 Dec. 2024.
 
 # Code Appendix
 
