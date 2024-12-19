@@ -32,7 +32,7 @@ These are our main research questions:
 
 3.  In 2023, what were the types of delays on average that the Top 10 airlines experienced the week of Christmas?
 
-4.  What are the Air Travel Routes that are most impacted by the departing delays at the Philadelphia Airport?
+4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
 
 # Data Inventory
 
@@ -164,7 +164,7 @@ airlineInfo2020 <- christmas_week2020 %>%
 
 Now that we have the specific airline names, we need to calculate the average airline delay based on the top 10 airlines. We need to group_by() the airline name and days of the week because we want to differentiate what departure delays the various airlines are experiencing the week of Christmas.
 
-The average delay can be found by applying the mean() to departure delay. In order to ensure that our graph is clear to read, we decided to only plot a few airlines. In this case, we choose the top ten airlines according to the based on the https://airadvisor.com/en/top-us-airlines-rating website.
+The average delay can be found by applying the mean() to departure delay. In order to ensure that our graph is clear to read, we decided to only plot a few airlines. In this case, we choose the top ten airlines according to the based on the <https://airadvisor.com/en/top-us-airlines-rating> website.
 
 ```{r}
 #| warning: False
@@ -312,57 +312,48 @@ Finally, looking at the diverted flight delays, Hawaiian Airlines had the lowest
 
 **Based on this information, we can conclude that the performance of the Hawaiian Airlines were by far the best in the week of Christmas 2023.**
 
-# Research Question 4: What are the Top 5 Most Popular Air Travel Routes Departure Delays at the Philadelphia Airport?
+# Research Question 4: What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
 
-In order to look at the
+In order to look at the Top 10 most popular air travel destinations, we want to create a map of the U.S. and plot the Philadelphia Airport as the origin and have arrows going to various other airports.
+
+In order to do this, we need to use the ggmap package. We also need to have the latitude and longitude coordinates of the various airports. Since our dataset did not have this information, we got another dataset from the [U.S. Airport](https://data.humdata.org/dataset/ourairports-usa) website. In this website, the dataset has the longitude and latitudes of the the airports, and has a specific column that breaks down what each airports IATA is. Since we have IATA code columns in our own dataset (ORIGIN and DEST), we can use the select() to get the three columns latitude_deg, iata_code, and longitude_deg. Then, we use the left_join() by the IATA codes for both the orgin and destination. This also meant that we renamed these column based on what coordinates they match to.
 
 ```{r}
-#| echo: False
-#| message: False
 #| warning: False
-library(ggplot2)
 library(ggmap)
 
-# Load airport data with IATA codes, latitude, and longitude
+# Load airport data and select IATA codes, latitude, and longitude
 airports <- read.csv("C:/Users/felic/Downloads/us-airports.csv")
 
 airports_coords <- airports %>%
-  select(latitude_deg, iata_code, latitude_deg, longitude_deg)
+  select(latitude_deg, iata_code,longitude_deg)
 
-```
-
-```{r}
-#| echo: False
-#| message: False
-#| warning: False
-# Merge latitude/longitude with original data for ORIGIN
+# Merge the selected columns with the ORIGIN column based on the IATA codes
 flight_with_coords <- airlineInfo2023 %>%
   left_join(airports_coords, by = c("ORIGIN" = "iata_code")) %>%
+  #Now we can store the orgin's latitude and longitude values
   rename(
     originLat = latitude_deg,
     originLong = longitude_deg,
   )
-```
-
-```{r}
-#| echo: False
-#| message: False
-#| warning: False
-# Merge latitude and longitude for DESTINATION
+# Merge the selected columns with the DEST column based on the IATA codes
 flight_with_coords <- flight_with_coords %>%
   left_join(airports_coords, by = c("DEST" = "iata_code")) %>%
   rename(
     destLat = latitude_deg,
     destLong = longitude_deg
   )
+
 ```
+
+The next step is to take this newly merged dataset use the filter() to have the origin equal to Philadelphia and use the groupby() to group by the destination. Also, to in order insure that the latitude and longitude values are numberical, we can read them using the as.numberic().
 
 ```{r}
 #| echo: False
 #| message: False
 #| warning: False
 phl_departures <- flight_with_coords %>%
-  filter(ORIGIN == "PHL", DEP_DELAY_NEW >0) %>%
+  filter(ORIGIN == "PHL") %>%
   group_by(DEST)  %>%
   mutate(
     destLong = as.numeric(destLong),
@@ -371,6 +362,8 @@ phl_departures <- flight_with_coords %>%
     originLat = as.numeric(originLat)
   )
 ```
+
+Now, in order to find the most popular destinations, we are going to use the count() to count how many destinations flights from Phildaephia were traveling to. Then, we can use the arrange() and desc(n) so the counts will be from most destination to least.
 
 ```{r}
 #| echo: False
@@ -384,35 +377,47 @@ top_destinations <- phl_departures %>%
 
 ```
 
+Then, using the head(10) and filter(), we stored the top 10 destinations.
+
 ```{r}
 #| echo: False
 #| message: False
 #| warning: False
-# Filter data to keep only top 5 destinations
+# Filter data to keep only top 10 destinations
 phl_top_10 <- phl_departures %>%
   filter(DEST %in% top_destinations$DEST)
 ```
 
+One of the most challenging parts of this analysis was the data visualization. In order to do this, we used another package called ggrepel. Next, since we needed to plot a U.S. map, we had to use this specific code that created the template for the plot:
+
 ```{r}
-#| echo: False
+#| echo: True
 #| message: False
 #| warning: False
 # Define the U.S. map
 library(ggrepel)
 us_map <- borders("state", colour = "gray70", fill = "gray95")
 
+```
+
+With this template, we used the ggplot(), geom_point(), geom_text_repel(), geom_curve(), theme(), theme_void(), and other functions to plot specific points of the U.S. map that correlates to the latitude and longitude destinations. Once we did this, we got the following plot:
+
+```{r}
+#| echo: False
+#| message: False
+#| warning: False
 # Plot the map with Philadelphia as the origin and arrows to the top 5 destinations
 ggplot() + 
   us_map + 
   geom_point(
     data = phl_top_10, 
-    aes(x = destLong, y = destLat), 
-    col = "#970027", size = 2
+    aes(x = destLong, y = destLat, label = DEST), 
+    col = "#970027", size = 2, 
   ) +  # Add destination points
   geom_text_repel(
     data = phl_top_10, 
     aes(x = destLong, y = destLat, label = DEST), 
-    col = "black", size = 3, segment.color = "gray70"
+    col = "black", size = 10, segment.color = "gray"
   ) +  # Add labels for destinations
   geom_curve(
     data = phl_top_10, 
