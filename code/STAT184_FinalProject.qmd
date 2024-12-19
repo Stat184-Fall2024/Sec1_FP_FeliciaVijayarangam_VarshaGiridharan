@@ -457,6 +457,96 @@ ggplot() +
 
 Looking at the code, we can see that the top ten number of flights go to Texas, Georgia, Florida, Illinois, Tennessee, Massachusetts, Colorado, and North Carolina. Then, we can further see that since three of the airports in Florida have high number of flights, showing that Florida is one of the popular destination spots.
 
+# Research Question 5: How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
+
+```{r}
+# 1. Find most popular airports in the week of Christmas for 2023 
+
+# Create a dataframe that counts the number of flights and calculates average delays by ORIGIN (airport)
+flights_by_airport_2023 <- christmas_week2023 %>%
+  group_by(ORIGIN) %>%
+  summarise(
+    Number_of_Flights = n(),
+    Avg_Weather_Delay = median(WEATHER_DELAY, na.rm = TRUE),
+    Avg_Carrier_Delay = median(CARRIER_DELAY, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Number_of_Flights))
+
+# Filter for the top 10 busiest airports
+top10_flights_by_airport_2023 <- flights_by_airport_2023 %>%
+  slice_max(order_by = Number_of_Flights, n = 10) %>%
+  left_join(airlineInfo2023 %>% select(ORIGIN), 
+            by = "ORIGIN") %>%
+  distinct()
+
+# 2. Find most popular airlines in the week of Christmas for 2023 
+
+# Create a dataframe that counts the number of flights and calculates average delays by Airline Name
+flights_by_airline_2023 <- christmas_week2023 %>%
+  group_by(OP_UNIQUE_CARRIER) %>%
+  summarise(
+    Number_of_Flights = n(),
+    Avg_Weather_Delay = median(WEATHER_DELAY, na.rm = TRUE),
+    Avg_Carrier_Delay = median(CARRIER_DELAY, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Number_of_Flights))
+
+# Filter for the top 10 airlines by number of flights
+top10_flights_by_airline_2023 <- flights_by_airline_2023 %>%
+  slice_max(order_by = Number_of_Flights, n = 10) %>%
+  left_join(airlineInfo2023 %>% select(OP_UNIQUE_CARRIER), 
+            by = "OP_UNIQUE_CARRIER") %>%
+  distinct()
+
+# 3. Compare mean weather delays at top 10 airports for 2023 vs. 2020
+
+bind_rows(
+  christmas_week2023 %>% mutate(Year = 2023),
+  christmas_week2020 %>% mutate(Year = 2020)
+) %>%
+  filter(ORIGIN %in% top10_flights_by_airport_2023$ORIGIN) %>%
+  group_by(ORIGIN, Year) %>%
+  summarise(Mean_Weather_Delay = mean(WEATHER_DELAY, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = Mean_Weather_Delay, y = reorder(ORIGIN, Mean_Weather_Delay), fill = as.factor(Year))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  coord_flip() +
+  labs(
+    title = "Mean Weather Delays at Top 10 Airports (2023 vs. 2020)",
+    x = "Mean Weather Delay (minutes)",
+    y = "Airport (IATA Code)",
+    fill = "Year"
+  ) +
+  theme_minimal()
+
+```
+
+This bar chart compares the mean weather-related delays at the top 10 busiest airports during the Christmas week (20th-27th December) for the years 2020 and 2023. Notable differences are observed at airports like Los Angeles (LAX), San Francisco (SFO), and Seattle (SEA), where weather delays in 2020 were significantly higher. All of these airports are located on the West Coast, suggesting that weather-related delays in 2020 may have been influenced by common regional weather factors such as winter storms or heavy rain. This trend highlights airports where weather conditions during the holiday season posed considerable operational challenges, with 2020 showing a notably more disruptive impact on flight schedules at these locations compared to 2023.
+
+# Research Question 6: How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
+
+```{r}
+bind_rows(
+  christmas_week2023 %>% mutate(Year = 2023),
+  christmas_week2020 %>% mutate(Year = 2020)
+) %>%
+  filter(ORIGIN %in% c("PIT", "PHL"), DAY_OF_MONTH >= 20 & DAY_OF_MONTH <= 27) %>%
+  pivot_longer(cols = c(CARRIER_DELAY, WEATHER_DELAY), names_to = "Delay_Type", values_to = "Delay_Value") %>%
+  group_by(DAY_OF_MONTH, ORIGIN, Delay_Type, Year) %>%
+  summarise(Mean_Delay = mean(Delay_Value, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = DAY_OF_MONTH, y = Mean_Delay, fill = as.factor(Year))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ ORIGIN, ncol = 2) +
+  theme_minimal() +
+  labs(
+    title = "Mean Delay by Type, Day, and Airport (Pittsburgh and Philadelphia, 2023 vs. 2020)",
+    x = "Day of the Month",
+    y = "Mean Delay (minutes)",
+    fill = "Year"
+  )
+```
+
+This bar chart compares the mean weather-related delays at the top 10 busiest airports during the Christmas week (20th-27th December) for the years 2020 and 2023. Notable differences are observed at airports like Los Angeles (LAX), San Francisco (SFO), and Seattle (SEA), where weather delays in 2020 were significantly higher. All of these airports are located on the West Coast, suggesting that weather-related delays in 2020 may have been influenced by common regional weather factors such as winter storms or heavy rain. This trend highlights airports where weather conditions during the holiday season posed considerable operational challenges, with 2020 showing a notably more disruptive impact on flight schedules at these locations compared to 2023.
+
 \newpage
 
 # Conclusions
@@ -472,8 +562,10 @@ Overall in our analysis, we were able to answer the following questions:
 4.  What are the Top 10 Most Popular destinations nationwide to travel to during Christmas at the Philadelphia Airport?
 
 5.  How did mean weather delays at the top 10 busiest airports during the Christmas travel week compare between 2020 and 2023?
+Significant weather delays in 2020 were observed, especially at West Coast airports like LAX, SFO, and SEA, where storms may have had a disruptive impact on flight schedules. In 2023, these weather delays were notably lower—an indication of improvement in weather conditions or even operational preparedness.
 
 6.  How did the average delays (weather and carrier delays) differ between Pittsburgh (PIT) and Philadelphia (PHL) during the week of Christmas in 2023 compared to 2020?
+The analysis for PIT and PHL highlighted similar patterns in weather and carrier delays across both years, with 2020 showing more erratic delay patterns, especially around December 24th, likely due to weather conditions over the region. In 2023, delays were generally more consistent across the days of the week.
 
 # References
 
